@@ -1,1 +1,1 @@
-# 📸 Screenshot Maker
+# 📸 Code Screenshot Maker
