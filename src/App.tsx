@@ -1,7 +1,9 @@
+import { Button } from "./components/ui/button";
+
 function App() {
   return (
     <>
-      <div className="text-center">lol</div>
+      <Button>Click Me</Button>
     </>
   );
 }
