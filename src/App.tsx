@@ -1,9 +1,15 @@
-import CodeEditor from "./components/code-editor";
+import CodeEditor from './components/code-editor';
+import { Button } from './components/ui/button';
+import { useStore } from './store';
 
 function App() {
+  const { setCode, remove } = useStore();
   return (
-    <main className="dark min-h-screen flex justify-center items-center bg-neutral-950 text-white">
+    <main className='dark flex min-h-screen items-center justify-center bg-neutral-950 text-white'>
+      <Button onClick={() => setCode('top')}>test</Button>
+      <Button onClick={() => remove()}>DELETE</Button>
       <CodeEditor />
+      sdfgsfs
     </main>
   );
 }
