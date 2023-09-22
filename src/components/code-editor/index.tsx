@@ -3,22 +3,39 @@ import options from '@/options';
 import React from 'react';
 import Editor from 'react-simple-code-editor';
 import hljs from 'highlight.js';
+import { useStore } from '../../store';
 
 export default function CodeEditor() {
   const handleEditorClick = (
     e: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLTextAreaElement>
   ) => {
-    // Check if the clicked element is a textarea
+    // Check if the clicked element is a textarea because Editor component provided by 'react-simple-code-editor'is defined as HTMLDivElement and HTMLTextAreaElement
     if (e.currentTarget instanceof HTMLTextAreaElement) {
       e.currentTarget.select();
     }
   };
+
+  const {
+    darkMode,
+    setDarkMode,
+    title,
+    setTitle,
+    code,
+    setCode,
+    language,
+    fontStyle,
+    fontSize,
+  } = useStore();
+
   return (
     <div
       className={cn(
         'min-w-[400px] rounded-xl border-2 shadow-2xl',
-        'border-gray-600/40 bg-black/75'
+        darkMode
+          ? 'border-gray-600/40 bg-black/75'
+          : 'border-gray-200/20 bg-white/75'
       )}
+      onClick={() => setDarkMode(!darkMode)}
     >
       <header className='grid grid-cols-6 items-center gap-3 px-4 py-3'>
         <div className='flex gap-1.5'>
@@ -29,7 +46,8 @@ export default function CodeEditor() {
         <div className='col-span-4 flex justify-center'>
           <input
             type='text'
-            value='Untitled'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             spellCheck={false}
             onClick={(e: React.MouseEvent<HTMLInputElement>) =>
               e.currentTarget.select()
@@ -39,17 +57,26 @@ export default function CodeEditor() {
           />
         </div>
       </header>
-      <div className={cn('px-4 pb-4')}>
+      <div
+        className={cn(
+          'px-4 pb-4',
+          darkMode
+            ? 'brightness-110'
+            : ' text-gray-800 brightness-50 contrast-200 saturate-200'
+        )}
+      >
         <Editor
-          value={options.codeSnippets[0].code}
+          value={code}
           highlight={(code) =>
-            hljs.highlight(code, { language: options.codeSnippets[0].language })
-              .value
+            hljs.highlight(code, { language: language || 'plaintext' }).value
           }
-          style={{ fontStyle: 'JetBrains Mono', fontSize: 18 }}
+          style={{
+            fontFamily: options.fonts[fontStyle].name,
+            fontSize: fontSize,
+          }}
           textareaClassName='focus:outline-none'
           onClick={handleEditorClick}
-          onValueChange={(e) => console.log(e)}
+          onValueChange={(code) => setCode(code)}
         />
       </div>
     </div>
