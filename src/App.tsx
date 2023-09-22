@@ -3,9 +3,11 @@ import CodeEditor from './components/code-editor';
 import { cn } from './lib/utils';
 import options from './options';
 import { useStore } from './store';
+import { Button } from './components/ui/button';
 
 function App() {
-  const { theme, fontStyle, showBackground, padding } = useStore();
+  const { theme, fontStyle, showBackground, padding, darkMode, setDarkMode } =
+    useStore();
   const selectedTheme = options.themes[theme];
   const editorRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -31,6 +33,7 @@ function App() {
         style={{ padding }}
         ref={editorRef}
       >
+        <Button onClick={() => setDarkMode(!darkMode)}> Switch Mode </Button>
         <CodeEditor />
       </div>
     </main>
