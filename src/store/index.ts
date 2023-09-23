@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-interface State {
+export interface State {
   code: string;
   title: string;
   theme: string;
@@ -14,7 +14,7 @@ interface State {
   padding: number;
 }
 
-const initialState: State = {
+export const initialState: State = {
   code: '',
   title: 'Untitled',
   theme: 'hyper',
@@ -27,7 +27,7 @@ const initialState: State = {
   padding: 64,
 };
 
-interface Action {
+export interface Action {
   setCode: (code: string) => void;
   setTitle: (title: string) => void;
   setTheme: (theme: string) => void;
