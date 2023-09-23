@@ -4,6 +4,8 @@ import React from 'react';
 import Editor from 'react-simple-code-editor';
 import hljs from 'highlight.js';
 import { useStore } from '../../store';
+import flourite from 'flourite';
+import { codeSnippets } from '@/options/snippets';
 
 export default function CodeEditor() {
   const handleEditorClick = (
@@ -17,7 +19,6 @@ export default function CodeEditor() {
 
   const {
     darkMode,
-    setDarkMode,
     title,
     setTitle,
     code,
@@ -25,7 +26,22 @@ export default function CodeEditor() {
     language,
     fontStyle,
     fontSize,
+    autoDetectLanguage,
+    setLanguage,
   } = useStore();
+
+  React.useEffect(() => {
+    const randomSnippet =
+      codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+    useStore.setState(randomSnippet);
+  }, []);
+
+  React.useEffect(() => {
+    if (autoDetectLanguage) {
+      const { language } = flourite(code, { noUnknown: true });
+      setLanguage(language.toLocaleLowerCase() || 'plaintext');
+    }
+  }, [code, autoDetectLanguage, setLanguage]);
 
   return (
     <div
@@ -35,7 +51,6 @@ export default function CodeEditor() {
           ? 'border-gray-600/40 bg-black/75'
           : 'border-gray-200/20 bg-white/75'
       )}
-      onClick={() => setDarkMode(!darkMode)}
     >
       <header className='grid grid-cols-6 items-center gap-3 px-4 py-3'>
         <div className='flex gap-1.5'>
@@ -52,7 +67,7 @@ export default function CodeEditor() {
             onClick={(e: React.MouseEvent<HTMLInputElement>) =>
               e.currentTarget.select()
             }
-            readOnly={true}
+            readOnly={false}
             className='bg-transparent text-center text-sm font-medium text-gray-400 focus:outline-none'
           />
         </div>
