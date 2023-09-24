@@ -6,8 +6,13 @@ import hljs from 'highlight.js';
 import { useStore } from '../../store';
 import flourite from 'flourite';
 import { codeSnippets } from '@/options/snippets';
+import { Resizable } from 're-resizable';
 
-export default function CodeEditor() {
+interface CodeEditorProps {
+  editorRef: React.MutableRefObject<HTMLDivElement | null>;
+}
+
+export default function CodeEditor({ editorRef }: CodeEditorProps) {
   const handleEditorClick = (
     e: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLTextAreaElement>
   ) => {
@@ -28,7 +33,12 @@ export default function CodeEditor() {
     fontSize,
     autoDetectLanguage,
     setLanguage,
+    padding,
+    showBackground,
+    theme,
   } = useStore();
+
+  const selectedTheme = options.themes[theme];
 
   React.useEffect(() => {
     const randomSnippet =
@@ -44,56 +54,71 @@ export default function CodeEditor() {
   }, [code, autoDetectLanguage, setLanguage]);
 
   return (
-    <div
-      className={cn(
-        'min-w-[400px] rounded-xl border-2 shadow-2xl',
-        darkMode
-          ? 'border-gray-600/40 bg-black/75'
-          : 'border-gray-200/20 bg-white/75'
-      )}
+    <Resizable
+      enable={{ left: true, right: true }}
+      minWidth={padding * 2 + 400}
     >
-      <header className='grid grid-cols-6 items-center gap-3 px-4 py-3'>
-        <div className='flex gap-1.5'>
-          <div className='h-3 w-3 rounded-full bg-red-500' />
-          <div className='h-3 w-3 rounded-full bg-yellow-500' />
-          <div className='h-3 w-3 rounded-full bg-green-500' />
-        </div>
-        <div className='col-span-4 flex justify-center'>
-          <input
-            type='text'
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            spellCheck={false}
-            onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-              e.currentTarget.select()
-            }
-            readOnly={false}
-            className='bg-transparent text-center text-sm font-medium text-gray-400 focus:outline-none'
-          />
-        </div>
-      </header>
       <div
         className={cn(
-          'px-4 pb-4',
-          darkMode
-            ? 'brightness-110'
-            : ' text-gray-800 brightness-50 contrast-200 saturate-200'
+          'mb-2 overflow-hidden rounded-xl transition-all ease-out',
+          showBackground ? selectedTheme.background : 'ring ring-neutral-900'
         )}
+        style={{ padding }}
+        ref={editorRef}
       >
-        <Editor
-          value={code}
-          highlight={(code) =>
-            hljs.highlight(code, { language: language || 'plaintext' }).value
-          }
-          style={{
-            fontFamily: options.fonts[fontStyle].name,
-            fontSize: fontSize,
-          }}
-          textareaClassName='focus:outline-none'
-          onClick={handleEditorClick}
-          onValueChange={(code) => setCode(code)}
-        />
+        <div
+          className={cn(
+            'min-w-[400px] rounded-xl border-2 shadow-2xl',
+            darkMode
+              ? 'border-gray-600/40 bg-black/75'
+              : 'border-gray-200/20 bg-white/75'
+          )}
+        >
+          <header className='grid grid-cols-6 items-center gap-3 px-4 py-3'>
+            <div className='flex gap-1.5'>
+              <div className='h-3 w-3 rounded-full bg-red-500' />
+              <div className='h-3 w-3 rounded-full bg-yellow-500' />
+              <div className='h-3 w-3 rounded-full bg-green-500' />
+            </div>
+            <div className='col-span-4 flex justify-center'>
+              <input
+                type='text'
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                spellCheck={false}
+                onClick={(e: React.MouseEvent<HTMLInputElement>) =>
+                  e.currentTarget.select()
+                }
+                readOnly={false}
+                className='bg-transparent text-center text-sm font-medium text-gray-400 focus:outline-none'
+              />
+            </div>
+          </header>
+          <div
+            className={cn(
+              'px-4 pb-4',
+              darkMode
+                ? 'brightness-110'
+                : ' text-gray-800 brightness-50 contrast-200 saturate-200'
+            )}
+          >
+            <Editor
+              value={code}
+              highlight={(code) =>
+                hljs.highlight(code, { language: language || 'plaintext' })
+                  .value
+              }
+              style={{
+                fontFamily: options.fonts[fontStyle].name,
+                fontSize: fontSize,
+              }}
+              textareaClassName='focus:outline-none'
+              onClick={handleEditorClick}
+              onValueChange={(code) => setCode(code)}
+            />
+          </div>
+        </div>
       </div>
-    </div>
+    </Resizable>
   );
 }
