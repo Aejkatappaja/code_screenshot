@@ -18,7 +18,7 @@ export default function ThemeSelect() {
         Theme
       </label>
       <Select value={theme} onValueChange={(theme) => setTheme(theme)}>
-        <SelectTrigger>
+        <SelectTrigger className='w-40'>
           <SelectValue placeholder='Select Theme' />
         </SelectTrigger>
         <SelectContent className='dark'>
