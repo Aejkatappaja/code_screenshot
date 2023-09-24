@@ -1,19 +1,14 @@
 import React from 'react';
-import CodeEditor from './components/code-editor';
-import { cn } from './lib/utils';
-import options from './options';
-import { useStore } from './store';
-import { Card, CardContent } from './components/ui/card';
-import ExportOptions from './components/controls/export-options/index.tsx';
-import ThemeSelect from './components/controls/theme-select/index.tsx';
-import LanguageSelect from './components/controls/language-select/index.tsx';
-import FontSelect from './components/controls/font-select/index.tsx';
-import FontSizeInput from './components/controls/font-size-input/index.tsx';
+import CodeEditor from '@/components/code-editor';
+import options from '@/options';
+import { useStore } from '@/store';
+import CardOptions from './components/card';
 
 function App() {
   const state = useStore();
-  const { theme, fontStyle, showBackground, padding } = state;
+  const { theme, fontStyle } = state;
   const selectedTheme = options.themes[theme];
+  const fonts = options.fonts[fontStyle];
   const editorRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
@@ -38,32 +33,11 @@ function App() {
         href={selectedTheme.theme}
         crossOrigin='anonymous'
       />
-      <link
-        rel='stylesheet'
-        href={options.fonts[fontStyle].src}
-        crossOrigin='anonymous'
-      />
-      <div
-        className={cn(
-          'mb-2 overflow-hidden rounded-xl transition-all ease-out',
-          showBackground
-            ? options.themes[theme].background
-            : 'ring ring-neutral-900'
-        )}
-        style={{ padding }}
-        ref={editorRef}
-      >
-        <CodeEditor />
-      </div>
-      <Card className='fixed bottom-16 mx-6 bg-neutral-900/90 px-8 py-6 backdrop-blur'>
-        <CardContent className='flex flex-wrap gap-6 p-0'>
-          <ThemeSelect />
-          <LanguageSelect />
-          <FontSelect />
-          <FontSizeInput />
-          <ExportOptions targetRef={editorRef} />
-        </CardContent>
-      </Card>
+
+      <link rel='stylesheet' href={fonts.src} crossOrigin='anonymous' />
+
+      <CodeEditor editorRef={editorRef} />
+      <CardOptions editorRef={editorRef} />
     </main>
   );
 }
