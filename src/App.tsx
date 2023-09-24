@@ -4,8 +4,11 @@ import { cn } from './lib/utils';
 import options from './options';
 import { useStore } from './store';
 import { Card, CardContent } from './components/ui/card';
-import ExportOptions from './components/controls/export-options.tsx';
+import ExportOptions from './components/controls/export-options/index.tsx';
 import ThemeSelect from './components/controls/theme-select/index.tsx';
+import LanguageSelect from './components/controls/language-select/index.tsx';
+import FontSelect from './components/controls/font-select/index.tsx';
+import FontSizeInput from './components/controls/font-size-input/index.tsx';
 
 function App() {
   const state = useStore();
@@ -53,8 +56,11 @@ function App() {
         <CodeEditor />
       </div>
       <Card className='fixed bottom-16 mx-6 bg-neutral-900/90 px-8 py-6 backdrop-blur'>
-        <CardContent className='flex flex-wrap gap-6 border-2 p-0'>
+        <CardContent className='flex flex-wrap gap-6 p-0'>
           <ThemeSelect />
+          <LanguageSelect />
+          <FontSelect />
+          <FontSizeInput />
           <ExportOptions targetRef={editorRef} />
         </CardContent>
       </Card>
