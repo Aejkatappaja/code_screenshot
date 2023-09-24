@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
-import { toBlob, toPng, toSvg } from 'html-to-image';
+import { toPng, toSvg } from 'html-to-image';
 import {
   DownloadIcon,
   ImageIcon,
@@ -15,6 +15,7 @@ import {
 } from '@radix-ui/react-icons';
 import toast from 'react-hot-toast';
 import { useStore, State } from '@/store';
+import { copyImage } from '@/lib/copy-image';
 
 interface ExportOptionsProps {
   targetRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -23,24 +24,9 @@ interface ExportOptionsProps {
 export default function ExportOptions({ targetRef }: ExportOptionsProps) {
   const state: State = useStore();
 
-  const copyImage = async () => {
-    if (targetRef.current !== null) {
-      const imgBlob = await toBlob(targetRef.current, { pixelRatio: 2 });
-      if (imgBlob) {
-        const img = new ClipboardItem({ 'image/png': imgBlob });
-        navigator.clipboard.write([img]);
-      } else {
-        toast.error('Image Blob is null');
-      }
-    }
-    return null;
-  };
-
   const copyLink = () => {
-    // Créer un objet pour stocker les paramètres d'URL
     const queryParams = new URLSearchParams();
 
-    // Ajouter chaque propriété de l'état en tant que paramètre d'URL
     queryParams.append('code', btoa(state.code));
     queryParams.append('title', state.title);
     queryParams.append('theme', state.theme);
@@ -55,10 +41,8 @@ export default function ExportOptions({ targetRef }: ExportOptionsProps) {
     queryParams.append('fontStyle', state.fontStyle);
     queryParams.append('padding', state.padding.toString());
 
-    // Obtenir la chaîne de requête complète
     const queryString = queryParams.toString();
 
-    // Copier l'URL dans le presse-papiers
     navigator.clipboard.writeText(`${window.location.href}?${queryString}`);
   };
 
@@ -99,7 +83,7 @@ export default function ExportOptions({ targetRef }: ExportOptionsProps) {
         <DropdownMenuItem
           className='gap-2'
           onClick={() =>
-            toast.promise(copyImage(), {
+            toast.promise(copyImage(targetRef), {
               loading: 'Copying...',
               success: 'Image copied to clipboard!',
               error: 'Something wents wrong!',
@@ -124,8 +108,8 @@ export default function ExportOptions({ targetRef }: ExportOptionsProps) {
           className='gap-2'
           onClick={() =>
             toast.promise(saveImage(state.title, 'PNG'), {
-              loading: 'Copying...',
-              success: 'Image copied to clipboard!',
+              loading: 'Exporting PNG image...',
+              success: 'Exported successfully!',
               error: 'Something wents wrong!',
             })
           }
@@ -137,8 +121,8 @@ export default function ExportOptions({ targetRef }: ExportOptionsProps) {
           className='gap-2'
           onClick={() =>
             toast.promise(saveImage(state.title, 'SVG'), {
-              loading: 'Copying...',
-              success: 'Image copied to clipboard!',
+              loading: 'Exporting SVG image...',
+              success: 'Exported successfully!',
               error: 'Something wents wrong!',
             })
           }
