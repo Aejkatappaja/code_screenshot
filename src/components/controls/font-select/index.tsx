@@ -1,3 +1,4 @@
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -9,16 +10,14 @@ import options from '@/options';
 import { useStore } from '@/store';
 
 export default function FontSelect() {
-  const { fontStyle } = useStore();
+  const { fontStyle, setFontStyle } = useStore();
 
   return (
     <div>
-      <label className='blick mb-2 text-xs font-medium text-neutral-400'>
-        Font
-      </label>
+      <Label title='Font' />
       <Select
         value={fontStyle}
-        onValueChange={(fontStyle) => useStore.setState({ fontStyle })}
+        onValueChange={(fontStyle) => setFontStyle(fontStyle)}
       >
         <SelectTrigger className='w-40'>
           <SelectValue placeholder='Select Font' />

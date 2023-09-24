@@ -1,3 +1,4 @@
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -22,9 +23,7 @@ export default function LanguageSelect() {
 
   return (
     <div>
-      <label className='blick mb-2 text-xs font-medium text-neutral-400'>
-        Language
-      </label>
+      <Label title='Language' />
       <Select value={language} onValueChange={handleChange}>
         <SelectTrigger className='w-40'>
           {autoDetectLanguage && <MagicWandIcon className='mr-2' />}

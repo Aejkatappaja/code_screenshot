@@ -1,3 +1,4 @@
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -14,9 +15,7 @@ export default function ThemeSelect() {
 
   return (
     <div>
-      <label className='blick mb-2 text-xs font-medium text-neutral-400'>
-        Theme
-      </label>
+      <Label title='Theme' />
       <Select value={theme} onValueChange={(theme) => setTheme(theme)}>
         <SelectTrigger className='w-40'>
           <SelectValue placeholder='Select Theme' />

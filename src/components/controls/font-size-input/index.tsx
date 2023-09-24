@@ -1,21 +1,20 @@
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useStore } from '@/store';
 
 export default function FontSizeInput() {
-  const { fontSize } = useStore();
+  const { fontSize, setFontSize } = useStore();
 
   return (
     <div>
-      <label className='mb-2 block text-xs font-medium text-neutral-400'>
-        Font Size
-      </label>
+      <Label title='Font Size' />
       <Input
         type='number'
         className='!dark w-16 bg-transparent'
         min={6}
         value={fontSize}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          useStore.setState({ fontSize: Number(e.target.value) })
+          setFontSize(Number(e.target.value))
         }
       />
     </div>
