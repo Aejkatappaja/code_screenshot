@@ -6,7 +6,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
-import { toPng, toSvg } from 'html-to-image';
 import {
   DownloadIcon,
   ImageIcon,
@@ -15,7 +14,7 @@ import {
 } from '@radix-ui/react-icons';
 import toast from 'react-hot-toast';
 import { useStore, State } from '@/store';
-import { copyImage } from '@/lib/copy-image';
+import { CopyImage, SaveImage } from '@/utils';
 
 interface ExportOptionsProps {
   targetRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -24,7 +23,7 @@ interface ExportOptionsProps {
 export default function ExportOptions({ targetRef }: ExportOptionsProps) {
   const state: State = useStore();
 
-  const copyLink = () => {
+  const CopyLink = () => {
     const queryParams = new URLSearchParams();
 
     queryParams.append('code', btoa(state.code));
@@ -46,31 +45,6 @@ export default function ExportOptions({ targetRef }: ExportOptionsProps) {
     navigator.clipboard.writeText(`${window.location.href}?${queryString}`);
   };
 
-  const saveImage = async (filename: string, format: string) => {
-    let imgUrl;
-
-    if (targetRef.current !== null) {
-      switch (format) {
-        case 'PNG':
-          imgUrl = await toPng(targetRef.current, { pixelRatio: 2 });
-          filename = `${filename}.png`;
-
-          break;
-        case 'SVG':
-          imgUrl = await toSvg(targetRef.current, { pixelRatio: 2 });
-          filename = `${filename}.svg`;
-
-          break;
-        default:
-          return;
-      }
-      const a = document.createElement('a');
-      a.href = imgUrl;
-      a.download = filename;
-      a.click();
-    }
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -83,7 +57,7 @@ export default function ExportOptions({ targetRef }: ExportOptionsProps) {
         <DropdownMenuItem
           className='gap-2'
           onClick={() =>
-            toast.promise(copyImage(targetRef), {
+            toast.promise(CopyImage({ ref: targetRef }), {
               loading: 'Copying...',
               success: 'Image copied to clipboard!',
               error: 'Something wents wrong!',
@@ -96,7 +70,7 @@ export default function ExportOptions({ targetRef }: ExportOptionsProps) {
         <DropdownMenuItem
           className='gap-2'
           onClick={() => {
-            copyLink();
+            CopyLink();
             toast.success('Link copied to clipBoard');
           }}
         >
@@ -107,11 +81,18 @@ export default function ExportOptions({ targetRef }: ExportOptionsProps) {
         <DropdownMenuItem
           className='gap-2'
           onClick={() =>
-            toast.promise(saveImage(state.title, 'PNG'), {
-              loading: 'Exporting PNG image...',
-              success: 'Exported successfully!',
-              error: 'Something wents wrong!',
-            })
+            toast.promise(
+              SaveImage({
+                ref: targetRef,
+                filename: state.title,
+                format: 'PNG',
+              }),
+              {
+                loading: 'Exporting PNG image...',
+                success: 'Exported successfully!',
+                error: 'Something wents wrong!',
+              }
+            )
           }
         >
           <DownloadIcon />
@@ -120,11 +101,18 @@ export default function ExportOptions({ targetRef }: ExportOptionsProps) {
         <DropdownMenuItem
           className='gap-2'
           onClick={() =>
-            toast.promise(saveImage(state.title, 'SVG'), {
-              loading: 'Exporting SVG image...',
-              success: 'Exported successfully!',
-              error: 'Something wents wrong!',
-            })
+            toast.promise(
+              SaveImage({
+                ref: targetRef,
+                filename: state.title,
+                format: 'SVG',
+              }),
+              {
+                loading: 'Exporting SVG image...',
+                success: 'Exported successfully!',
+                error: 'Something wents wrong!',
+              }
+            )
           }
         >
           <DownloadIcon />
