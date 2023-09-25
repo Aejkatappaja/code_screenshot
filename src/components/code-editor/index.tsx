@@ -3,10 +3,12 @@ import options from '@/options';
 import React from 'react';
 import Editor from 'react-simple-code-editor';
 import hljs from 'highlight.js';
-import { useStore } from '../../store';
+import { useStore } from '@/store';
 import flourite from 'flourite';
 import { codeSnippets } from '@/options/snippets';
 import { Resizable } from 're-resizable';
+import { EditorButton } from '@/components/ui/editor-button';
+import { EditorTitle } from '../ui/editor-title';
 
 interface CodeEditorProps {
   editorRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -24,8 +26,6 @@ export default function CodeEditor({ editorRef }: CodeEditorProps) {
 
   const {
     darkMode,
-    title,
-    setTitle,
     code,
     setCode,
     language,
@@ -76,22 +76,12 @@ export default function CodeEditor({ editorRef }: CodeEditorProps) {
         >
           <header className='grid grid-cols-6 items-center gap-3 px-4 py-3'>
             <div className='flex gap-1.5'>
-              <div className='h-3 w-3 rounded-full bg-red-500' />
-              <div className='h-3 w-3 rounded-full bg-yellow-500' />
-              <div className='h-3 w-3 rounded-full bg-green-500' />
+              <EditorButton color='red' />
+              <EditorButton color='yellow' />
+              <EditorButton color='green' />
             </div>
             <div className='col-span-4 flex justify-center'>
-              <input
-                type='text'
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                spellCheck={false}
-                onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                  e.currentTarget.select()
-                }
-                readOnly={false}
-                className='bg-transparent text-center text-sm font-medium text-gray-400 focus:outline-none'
-              />
+              <EditorTitle />
             </div>
           </header>
           <div
