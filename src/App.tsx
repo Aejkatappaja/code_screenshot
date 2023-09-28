@@ -3,6 +3,7 @@ import CodeEditor from '@/components/code-editor';
 import options from '@/options';
 import { useStore } from '@/store';
 import CardOptions from './components/card';
+import Footer from './components/footer';
 
 function App() {
   const state = useStore();
@@ -27,17 +28,16 @@ function App() {
   }, []);
 
   return (
-    <main className='dark flex min-h-screen items-center justify-center bg-neutral-950 text-white'>
+    <main className='dark fixed flex min-h-screen w-screen items-center justify-center bg-neutral-950 text-white'>
       <link
         rel='stylesheet'
         href={selectedTheme.theme}
         crossOrigin='anonymous'
       />
-
       <link rel='stylesheet' href={fonts.src} crossOrigin='anonymous' />
-
       <CodeEditor editorRef={editorRef} />
       <CardOptions editorRef={editorRef} />
+      <Footer />
     </main>
   );
 }
