@@ -6,7 +6,7 @@ export default function Footer() {
       by{' '}
       <a
         className=' flex items-center gap-1 text-purple-400/80'
-        href='https://github.https://github.com/Aejkatappaja/Screenshot_Maker/Aejkatappaja'
+        href='https://github.com/Aejkatappaja/Screenshot_Maker/Aejkatappaja'
         target='_blank'
       >
         Frank <img src={github} alt='github-icon' className='h-6 w-6' />
